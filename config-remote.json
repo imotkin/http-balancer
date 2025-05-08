@@ -1,0 +1,18 @@
+{  
+    "logging": "error",
+    "port": 8080,
+    "endpoints": [
+        "http://endpoint-first:80",
+        "http://endpoint-second:80",
+        "http://endpoint-third:80"
+    ],
+    "strategy": "round-robin",
+    "healthInterval": "10s",
+    "refillInterval": "300ms",
+    "defaults": {
+        "capacity": 10,
+        "rate": 1
+    },
+    "mode": "remote",
+    "migrationsPath": "migrations"
+}

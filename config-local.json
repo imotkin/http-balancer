@@ -1,0 +1,19 @@
+{  
+    "logging": "error",
+    "port": 8080,
+    "endpoints": [
+        "http://localhost:8081",
+        "http://localhost:8082",
+        "http://localhost:8083"
+    ],
+    "strategy": "round-robin",
+    "healthInterval": "10s",
+    "refillInterval": "300ms",
+    "defaults": {
+        "capacity": 10,
+        "rate": 1
+    },
+    "mode": "local",
+    "migrationsPath": "migrations",
+    "filePath": "clients.sqlite"
+}
