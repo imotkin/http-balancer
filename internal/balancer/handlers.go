@@ -75,7 +75,8 @@ func (b *Balancer) AddClient() http.Handler {
 
 		key, err := b.clients.Add(r.Context(), client)
 		if err != nil {
-			ResponseError(w, "failed to get a client", http.StatusInternalServerError)
+			b.logger.Error("add client", "err", err)
+			ResponseError(w, "failed to add a client", http.StatusInternalServerError)
 			return
 		}
 
@@ -102,6 +103,8 @@ func (b *Balancer) GetClient() http.Handler {
 
 		client, err := b.clients.Get(r.Context(), key)
 		if err != nil {
+			b.logger.Error("get client", "key", key, "err", err)
+
 			if errors.Is(err, sql.ErrNoRows) {
 				ResponseError(w, "client is not found", http.StatusNotFound)
 				return
@@ -134,6 +137,8 @@ func (b *Balancer) DeleteClient() http.Handler {
 
 		err := b.clients.Delete(r.Context(), key)
 		if err != nil {
+			b.logger.Error("delete client", "key", key, "err", err)
+
 			if errors.Is(err, sql.ErrNoRows) {
 				ResponseError(w, "client is not found", http.StatusNotFound)
 				return
@@ -153,6 +158,7 @@ func (b *Balancer) GetList() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		clients, err := b.clients.List(r.Context())
 		if err != nil {
+			b.logger.Error("get clients list", "err", err)
 			ResponseError(w, "failed to get clients", http.StatusInternalServerError)
 			return
 		}

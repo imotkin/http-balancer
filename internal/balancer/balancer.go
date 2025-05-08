@@ -24,12 +24,6 @@ type Balancer struct {
 	// Выбранный алгоритм для работы балансировщика
 	strategy Strategy
 
-	// Список серверов, на которые выполняется переадресация исходных запросов
-	// endpoints []*Endpoint
-
-	// Атомарное значение для текущего индекса из списка серверов
-	// current atomic.Uint64
-
 	// Интервал для проверки (ping) текущего состояния всех серверов балансировщика
 	healthInterval time.Duration
 
@@ -42,12 +36,11 @@ type Balancer struct {
 	// Логгер для событий балансировщика
 	logger *slog.Logger
 
-	clients client.DatabaseStorage
+	// Хранилище для работы с клиентами балансировщика
+	clients client.Storage
 
+	// Конфигурация балансирощика
 	config *config.Config
-
-	ctx    context.Context
-	cancel context.CancelFunc
 }
 
 // Функция создания нового балансировщика на основе переданной конфигурации
@@ -129,7 +122,7 @@ func New(cfg *config.Config) (*Balancer, error) {
 	balancer := &Balancer{
 		limiter:  limiter,
 		logger:   logger,
-		clients:  *storage,
+		clients:  storage,
 		config:   cfg,
 		strategy: strategy,
 	}
@@ -151,11 +144,6 @@ func New(cfg *config.Config) (*Balancer, error) {
 }
 
 func (b *Balancer) Start(ctx context.Context) {
-	// child, cancel := context.WithCancel(ctx)
-
-	// b.ctx = child
-	// b.cancel = cancel
-
 	go b.limiter.StartRefill(
 		ctx, b.config.RefillInterval.Duration,
 	)
