@@ -63,7 +63,7 @@ curl -X POST localhost:8080/client -d '{"name":"ilya", "capacity": 1000, "rate":
         "http://endpoint-second:80",
         "http://endpoint-third:80"
     ],
-    "strategy": "round-robin", // стратегия работы балансирощика
+    "strategy": "round-robin", // стратегия работы балансирощика (round-robin, least-connections, random)
     "healthInterval": "10s",   // интервал проверки здоровья серверов (ping)
     "refillInterval": "300ms", // интервал пополнения токенов для TokenBucket
     "defaults": {              // стандартные значения для ёмкости и скорости пополнения Token Bucket
@@ -76,15 +76,6 @@ curl -X POST localhost:8080/client -d '{"name":"ilya", "capacity": 1000, "rate":
 }
 ```
 
-Проект разделён на несколько пакетов:
-
-- balancer (балансировщик);
-- client (клиент);
-- config (конфигурация);
-- limiter (Rate limiting сервис);
-- migrations (миграции для БД);
-- server (сервер с graceful shutdown).
-
 Как уже было отмечено ранее, балансировщик может работать в двух режимах:
 - local;
 - remote.
@@ -92,3 +83,16 @@ curl -X POST localhost:8080/client -d '{"name":"ilya", "capacity": 1000, "rate":
 В режиме `local` для хранения данных клиентов (ключ, имя, ёмкость, скорость пополнения) применяется SQLite и все данные хранятся в одном файле. 
 
 В режиме `remote` используется PostgreSQL, для него необходим файл `.env`, в котором указываются данные (хост, пользователь, пароль и т.д.) для соединения с СУБД.
+
+Для работы в локальном режиме используется файл [config-local.json](/config-local.json), а для Docker Compose файл [config-remote.json](/config-remote.json)
+
+Проект разделён на несколько пакетов:
+
+- balancer (балансировщик);
+- client (клиент);
+- config (конфигурация);
+- limiter (rate limiting сервис);
+- migrations (миграции для БД);
+- server (сервер с graceful shutdown).
+
+
