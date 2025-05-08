@@ -1,12 +1,14 @@
 ### Тестовое задание для Cloud.ru
 
+[Условие задания](https://github.com/Go-Cloud-Camp/test-assignment)
+
 #### Запуск с помощью Docker Compose:
 
 ```sh 
 docker-compose up -d --build
 ```
 
-При запуске Docker Compose работают 5 контейнеров: один для балансировщика, один для PostgreSQL, и ещё три для тестовых серверов [nginxdemos/hello:plain-text](https://hub.docker.com/r/nginxdemos/hello/)
+При запуске Docker Compose работают 5 контейнеров: один для балансировщика, один для PostgreSQL, и ещё три для тестовых серверов [nginxdemos/hello:plain-text](https://hub.docker.com/r/nginxdemos/hello/).
 
 После этого для проверки можно отправить запрос на `localhost:8080`, чтобы убедиться в том, что балансировщик работает и тестовый сервер возвращает полученный им HTTP-запрос:
 
@@ -24,7 +26,7 @@ go run ./... -config config-local.json
 go test ./internal/balancer -bench=. -benchmem
 ```
 
-Результаты бенчмарков представлены в файлах [ab-bench](/ab-bench) и [hey-bench](/hey-bench)
+Результаты бенчмарков представлены в файлах [ab-bench](/ab-bench) и [hey-bench](/hey-bench).
 
 Для бенчмарков были использованы следующие команды:
 
@@ -76,17 +78,17 @@ curl -X POST localhost:8080/client -d '{"name":"ilya", "capacity": 1000, "rate":
 
 Проект разделён на несколько пакетов:
 
-- balancer (балансировщик)
-- client (клиент)
-- config (конфигурация)
-- limiter (Rate limiting сервис)
-- migrations (миграции для БД)
-- server (сервер с graceful shutdown)
+- balancer (балансировщик);
+- client (клиент);
+- config (конфигурация);
+- limiter (Rate limiting сервис);
+- migrations (миграции для БД);
+- server (сервер с graceful shutdown).
 
 Как уже было отмечено ранее, балансировщик может работать в двух режимах:
-- local
-- remote
+- local;
+- remote.
 
 В режиме `local` для хранения данных клиентов (ключ, имя, ёмкость, скорость пополнения) применяется SQLite и все данные хранятся в одном файле. 
 
-В режиме `remote` используется PostgreSQL, для него необходим файл `.env`, в котором указываются данные (хост, пользователь, пароль и т.д.) для соединения с СУБД
+В режиме `remote` используется PostgreSQL, для него необходим файл `.env`, в котором указываются данные (хост, пользователь, пароль и т.д.) для соединения с СУБД.
