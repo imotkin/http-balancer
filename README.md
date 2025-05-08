@@ -23,7 +23,7 @@ go run ./... -config config-local.json
 #### Для запуска тестов балансировщика:
 
 ```sh 
-go test ./internal/balancer -bench=. -benchmem
+go test ./internal/balancer -bench=. -benchmem -race
 ```
 
 Результаты бенчмарков представлены в файлах [ab-bench](/ab-bench) и [hey-bench](/hey-bench).
