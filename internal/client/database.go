@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 
+	_ "github.com/lib/pq"
 	_ "modernc.org/sqlite"
 
 	"github.com/google/uuid"
@@ -13,7 +14,7 @@ import (
 var _ Storage = (*DatabaseStorage)(nil)
 
 // Структура для работы с локальной (SQLite)
-// и удалённой базы данных клиентов (PostgreSQL)
+// и удалённой базой данных клиентов (PostgreSQL)
 type DatabaseStorage struct {
 	conn *sql.DB
 
@@ -43,6 +44,7 @@ func (s *DatabaseStorage) Connection() *sql.DB {
 	return s.conn
 }
 
+// Получение списка клиентов в базе данных
 func (s *DatabaseStorage) List(ctx context.Context) ([]Client, error) {
 	rows, err := s.conn.QueryContext(ctx,
 		`SELECT api_key, name, capacity, rate 
@@ -73,6 +75,7 @@ func (s *DatabaseStorage) List(ctx context.Context) ([]Client, error) {
 	return clients, nil
 }
 
+// Добавление нового клиента в базу данных
 func (s *DatabaseStorage) Add(ctx context.Context, client Client) (string, error) {
 	key := uuid.NewString()
 
@@ -86,7 +89,7 @@ func (s *DatabaseStorage) Add(ctx context.Context, client Client) (string, error
 	return key, nil
 }
 
-// Метод добавления нового клиента в базу данных
+// Проверка клиента в базе данных и добавление, если его нет
 func (s *DatabaseStorage) Has(ctx context.Context, key string) (*Client, error) {
 	var c Client
 
@@ -106,7 +109,7 @@ func (s *DatabaseStorage) Has(ctx context.Context, key string) (*Client, error) 
 	return &c, nil
 }
 
-// Метод получения клиента из базы данных по заданному ключу
+// Получение клиента из базы данных по заданному ключу
 func (s *DatabaseStorage) Get(ctx context.Context, key string) (*Client, error) {
 	var c Client
 
@@ -122,6 +125,7 @@ func (s *DatabaseStorage) Get(ctx context.Context, key string) (*Client, error) 
 	return &c, nil
 }
 
+// Удаление клиента из базы данных по заданному ключу
 func (s *DatabaseStorage) Delete(ctx context.Context, key string) error {
 	res, err := s.conn.ExecContext(ctx, "DELETE FROM clients WHERE api_key = $1", key)
 	if err != nil {
