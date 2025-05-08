@@ -65,7 +65,7 @@ curl -X POST localhost:8080/client -d '{"name":"ilya", "capacity": 1000, "rate":
     ],
     "strategy": "round-robin", // стратегия работы балансирощика
     "healthInterval": "10s",   // интервал проверки здоровья серверов (ping)
-    "refillInterval": "300ms", // интревал пополнения токенов для TokenBucket
+    "refillInterval": "300ms", // интервал пополнения токенов для TokenBucket
     "defaults": {              // стандартные значения для ёмкости и скорости пополнения Token Bucket
         "capacity": 10,
         "rate": 1
