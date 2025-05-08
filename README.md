@@ -95,4 +95,4 @@ curl -X POST localhost:8080/client -d '{"name":"ilya", "capacity": 1000, "rate":
 - migrations (миграции для БД);
 - server (сервер с graceful shutdown).
 
-
+Для создания тестового сервера без внешних зависимотсей в виде Docker или каких-либо других возможно воспользовться функцией `NewListener`.
